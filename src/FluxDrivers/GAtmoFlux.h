@@ -125,7 +125,8 @@ protected:
   double           fMaxEv;            ///< maximum energy (in input flux files)
   PDGCodeList *    fPdgCList;         ///< input list of neutrino pdg-codes
   int              fgPdgC;            ///< current generated nu pdg-code
-   
+  TLorentzVector   fgP4;              ///< current generated nu 4-momentum    +   
+  TLorentzVector   fgX4;              ///< current generated nu 4-position
   double           fWeight;           ///< current generated nu weight
   long int         fNNeutrinos;       ///< number of flux neutrinos thrown so far
   double           fMaxEvCut;         ///< user-defined cut: maximum energy 
