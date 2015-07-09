@@ -234,7 +234,7 @@ bool GAtmoFlux::GenerateNext_1try(void)
 
   // Set the neutrino momentum and position 4-vectors with values
   // calculated at previous steps.
-  fgP4.SetPxPyPzE(px, py, pz, Ev);
+  fgP4.SetPxPyPzE(px, py, pz, Ev);  
   fgX4.SetXYZT   (x,  y,  z,  0.);
 
   // Increment flux neutrino counter used for sample normalization purposes.

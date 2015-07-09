@@ -243,6 +243,7 @@
 #ifdef __GENIE_FLUX_DRIVERS_ENABLED__
 #include "FluxDrivers/GFlukaAtmo3DFlux.h"
 #include "FluxDrivers/GBartolAtmoFlux.h"
+#include "FluxDrivers/GHondaAtmoFlux.h"
 #endif
 
 #ifdef __GENIE_GEOM_DRIVERS_ENABLED__
@@ -442,7 +443,11 @@ GFluxI* GetFlux(void)
   if(gOptFluxSim == "BGLRS") {
      GBartolAtmoFlux * bartol_flux = new GBartolAtmoFlux;
      atmo_flux_driver = dynamic_cast<GAtmoFlux *>(bartol_flux);
-  } else {
+  } else
+  if(gOptFluxSim == "HONDA"){
+    GFlukaAtmo3DFlux * fluka_flux = new GFlukaAtmo3DFlux;
+     atmo_flux_driver = dynamic_cast<GAtmoFlux *>(fluka_flux);
+  }else {
      LOG("gevgen_atmo", pFATAL) << "Uknonwn flux simulation: " << gOptFluxSim;
      gAbortingInErr = true;
      exit(1);
