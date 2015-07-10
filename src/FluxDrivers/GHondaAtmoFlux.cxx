@@ -127,16 +127,16 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename)
 
   int    ibin, section, subsection, line;
   double energy, costheta, flux, phi;
-  char   j1;
+  std::string   j1;
   std::string junk;
   section = subsection = line = 1; //initialising some values
   costheta= 0.95;
   phi = 15; 
 
-  ifstream data_test("datatest.dat", ios::out)
+  ofstream data_test("datatest.dat", ios::out);
   double scale = 1.0; // 1.0 [m^2], OR 1.0e-4 [cm^2]
 
-  while ( !flux_stream.eof() ) {
+  while ( flux_stream ) {
     flux = 0.0;
     if (line == 1 || line == 2){
       std::getline(flux_stream, junk);
@@ -144,22 +144,20 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename)
     } else {
       flux_stream >> energy >> flux >> j1 >> j1 >> j1; //currently only reads NuMu
       line++;
+      costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
+          //section of data we are in, this gives middle value
+      phi = -15 + (subsection * 30); //phi known by subsection, again gives middle value
       if( line == 104 ){ //new phi range
         ++subsection;
-        phi = -15 + (subsection * 30); //phi known by subsection, again gives middle value
         line = 1;
         getline(flux_stream, junk);
         if (subsection == 13) //new costheta range
         {
           ++section;
-          costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
-          //section of data we are in, this gives middle value
           subsection = 1;
         }
       }
     }
-    data_test << energy << " " << flux << " " << costheta << " " << phi << std::endl;
-
     if( flux>0.0 ){
       LOG("Flux", pINFO)
         << "Flux[Ev = " << energy 
