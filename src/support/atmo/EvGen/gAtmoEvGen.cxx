@@ -445,8 +445,8 @@ GFluxI* GetFlux(void)
      atmo_flux_driver = dynamic_cast<GAtmoFlux *>(bartol_flux);
   } else
   if(gOptFluxSim == "HONDA"){
-    GFlukaAtmo3DFlux * fluka_flux = new GFlukaAtmo3DFlux;
-     atmo_flux_driver = dynamic_cast<GAtmoFlux *>(fluka_flux);
+    GHondaAtmoFlux * fluka_flux = new GHondaAtmoFlux;
+     atmo_flux_driver = dynamic_cast<GAtmoFlux *>(honda_flux);
   }else {
      LOG("gevgen_atmo", pFATAL) << "Uknonwn flux simulation: " << gOptFluxSim;
      gAbortingInErr = true;
