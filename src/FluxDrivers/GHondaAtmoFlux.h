@@ -44,10 +44,10 @@ namespace genie {
 namespace flux  {
 
 // Number of cos(zenith) and energy bins in flux simulation
-const unsigned int kGHondaNumCosThetaBins       = 40;
+const unsigned int kGHondaNumCosThetaBins       = 20;
 const double       kGHondaCosThetaMin           = -1.0;
 const double       kGHondaCosThetaMax           =  1.0;
-const unsigned int kGHondaNumLogEvBins          = 61;
+const unsigned int kGHondaNumLogEvBins          = 101;
 const unsigned int kGHondaNumLogEvBinsPerDecade = 20;
 const double       kGHondaEvMin                 = 0.100; // GeV
 
