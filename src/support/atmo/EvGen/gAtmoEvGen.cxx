@@ -613,9 +613,9 @@ void GetCommandLineArgs(int argc, char ** argv)
     for(string::size_type i=0; i<gOptFluxSim.size(); i++) {
        gOptFluxSim[i] = toupper(gOptFluxSim[i]);
     }
-    if((gOptFluxSim != "FLUKA") && (gOptFluxSim != "BGLRS")) {
+    if((gOptFluxSim != "FLUKA") && (gOptFluxSim != "BGLRS") && (gOptFluxSim != "HONDA")) {
         LOG("gevgen_atmo", pFATAL) 
-             << "The flux file source needs to be one of <FLUKA,BGLRS>"; 
+             << "The flux file source needs to be one of <FLUKA,BGLRS,HONDA>"; 
         PrintSyntax();
         gAbortingInErr = true;
         exit(1);

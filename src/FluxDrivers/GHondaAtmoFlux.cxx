@@ -110,7 +110,7 @@ void GHondaAtmoFlux::SetBinSizes(void)
   fNumEnergyBins   = kGHondaNumLogEvBins;
 }
 //____________________________________________________________________________
-bool GFlukaAtmo3DFlux::FillFluxHisto2D(TH2D * histo, string filename)
+bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename)
 {
   LOG("Flux", pNOTICE) << "Loading: " << filename;
 
