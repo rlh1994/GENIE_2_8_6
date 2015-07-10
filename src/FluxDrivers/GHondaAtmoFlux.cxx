@@ -43,7 +43,7 @@ GHondaAtmoFlux::GHondaAtmoFlux() :
 GAtmoFlux()
 {
   LOG("Flux", pNOTICE)
-       << "Instantiating the Fluka-3D atmospheric neutrino flux driver";
+       << "Instantiating the Honda atmospheric neutrino flux driver";
 
   this->SetBinSizes();
   this->Initialize();
@@ -59,7 +59,7 @@ void GHondaAtmoFlux::SetBinSizes(void)
 // Generate the correct cos(theta) and energy bin sizes
 // The flux is given in 40 bins of cos(zenith angle) from -1.0 to 1.0
 // (bin width = 0.05) and 61 equally log-spaced energy bins (20 bins 
-// per decade), with Emin = 0.100 GeV.
+// per decade), with Emin = 0.100 GgeV.
 //
 
   fCosThetaBins  = new double [kGHondaNumCosThetaBins  + 1];
@@ -126,11 +126,14 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename)
   }
 
   int    ibin, section, subsection, line;
-  double energy, costheta, flux;
+  double energy, costheta, flux, phi;
   char   j1;
   std::string junk;
-  section = subsection = line = 1;
+  section = subsection = line = 1; //initialising some values
+  costheta= 0.95;
+  phi = 15; 
 
+  ifstream data_test("datatest.dat", ios::out)
   double scale = 1.0; // 1.0 [m^2], OR 1.0e-4 [cm^2]
 
   while ( !flux_stream.eof() ) {
@@ -140,21 +143,23 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename)
       line++; //ignore these lines
     } else {
       flux_stream >> energy >> flux >> j1 >> j1 >> j1; //currently only reads NuMu
-      costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
-      //section of data we are in, this gives middle value
-      phi = -15 + (subsection * 30); //phi known by subsection, again gives middle value
       line++;
       if( line == 104 ){ //new phi range
         ++subsection;
+        phi = -15 + (subsection * 30); //phi known by subsection, again gives middle value
         line = 1;
         getline(flux_stream, junk);
         if (subsection == 13) //new costheta range
         {
           ++section;
+          costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
+          //section of data we are in, this gives middle value
           subsection = 1;
         }
       }
     }
+    data_test << energy << " " << flux << " " << costheta << " " << phi << std::endl;
+
     if( flux>0.0 ){
       LOG("Flux", pINFO)
         << "Flux[Ev = " << energy 
