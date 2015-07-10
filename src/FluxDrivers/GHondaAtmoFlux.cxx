@@ -111,7 +111,7 @@ void GHondaAtmoFlux::SetBinSizes(void)
   fNumEnergyBins   = kGHondaNumLogEvBins;
 }
 //____________________________________________________________________________
-bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename)
+bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, int pdg_nu)
 {
   LOG("Flux", pNOTICE) << "Loading: " << filename;
 
@@ -127,7 +127,6 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename)
 
   int    ibin, section, subsection, line;
   double energy, costheta, flux, phi;
-  std::string   j1;
   std::string junk;
   section = subsection = line = 1; //initialising some values
   costheta= 0.95;
@@ -136,36 +135,137 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename)
   ofstream data_test("datatest.dat", ios::out);
   double scale = 1.0; // 1.0 [m^2], OR 1.0e-4 [cm^2]
 
-  while ( flux_stream ) {
-    flux = 0.0;
-    if (line == 1 || line == 2){
-      std::getline(flux_stream, junk);
-      line++; //ignore these lines
-    } else {
-      flux_stream >> energy >> flux >> j1 >> j1 >> j1; //currently only reads NuMu
-      line++;
-      costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
-          //section of data we are in, this gives middle value
-      phi = -15 + (subsection * 30); //phi known by subsection, again gives middle value
-      if( line == 104 ){ //new phi range
-        ++subsection;
-        line = 1;
-        getline(flux_stream, junk);
-        if (subsection == 13) //new costheta range
-        {
-          ++section;
-          subsection = 1;
+  if(pdg_nu == 14){
+    while ( flux_stream ) {
+      flux = 0.0;
+      if (line == 1 || line == 2){
+        std::getline(flux_stream, junk);
+        line++; //ignore these lines
+      } else {
+        flux_stream >> energy >> flux >> junk >> junk >> junk; //currently only reads NuMu
+        line++;
+        costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
+            //section of data we are in, this gives middle value
+        phi = -15 + (subsection * 30); //phi known by subsection, again gives middle value
+        if( line == 104 ){ //new phi range
+          ++subsection;
+          line = 1;
+          getline(flux_stream, junk);
+          if (subsection == 13) //new costheta range
+          {
+            ++section;
+            subsection = 1;
+          }
         }
       }
+      if( flux>0.0 ){
+        LOG("Flux", pINFO)
+          << "Flux[Ev = " << energy 
+          << ", cos8 = " << costheta << "] = " << flux;
+        // note: reversing the Fluka sign convention for zenith angle
+        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta) );   
+        histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
+      }
     }
-    if( flux>0.0 ){
-      LOG("Flux", pINFO)
-        << "Flux[Ev = " << energy 
-        << ", cos8 = " << costheta << "] = " << flux;
-      // note: reversing the Fluka sign convention for zenith angle
-      ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta) );   
-      histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
+  } else if(pdg_nu == -14){
+    while ( flux_stream ) {
+      flux = 0.0;
+      if (line == 1 || line == 2){
+        std::getline(flux_stream, junk);
+        line++; //ignore these lines
+      } else {
+        flux_stream >> energy >> junk >> flux >> junk >> junk; //currently only reads NuMu
+        line++;
+        costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
+            //section of data we are in, this gives middle value
+        phi = -15 + (subsection * 30); //phi known by subsection, again gives middle value
+        if( line == 104 ){ //new phi range
+          ++subsection;
+          line = 1;
+          getline(flux_stream, junk);
+          if (subsection == 13) //new costheta range
+          {
+            ++section;
+            subsection = 1;
+          }
+        }
+      }
+      if( flux>0.0 ){
+        LOG("Flux", pINFO)
+          << "Flux[Ev = " << energy 
+          << ", cos8 = " << costheta << "] = " << flux;
+        // note: reversing the Fluka sign convention for zenith angle
+        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta) );   
+        histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
+      }
     }
+  } else if(pdg_nu == 12){
+    while ( flux_stream ) {
+      flux = 0.0;
+      if (line == 1 || line == 2){
+        std::getline(flux_stream, junk);
+        line++; //ignore these lines
+      } else {
+        flux_stream >> energy >> junk >> junk >> flux >> junk; //currently only reads NuMu
+        line++;
+        costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
+            //section of data we are in, this gives middle value
+        phi = -15 + (subsection * 30); //phi known by subsection, again gives middle value
+        if( line == 104 ){ //new phi range
+          ++subsection;
+          line = 1;
+          getline(flux_stream, junk);
+          if (subsection == 13) //new costheta range
+          {
+            ++section;
+            subsection = 1;
+          }
+        }
+      }
+      if( flux>0.0 ){
+        LOG("Flux", pINFO)
+          << "Flux[Ev = " << energy 
+          << ", cos8 = " << costheta << "] = " << flux;
+        // note: reversing the Fluka sign convention for zenith angle
+        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta) );   
+        histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
+      }
+    }
+  } else if (pdg_nu == -12){
+    while ( flux_stream ) {
+      flux = 0.0;
+      if (line == 1 || line == 2){
+        std::getline(flux_stream, junk);
+        line++; //ignore these lines
+      } else {
+        flux_stream >> energy >> junk >> junk >> junk >> flux; //currently only reads NuMu
+        line++;
+        costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
+            //section of data we are in, this gives middle value
+        phi = -15 + (subsection * 30); //phi known by subsection, again gives middle value
+        if( line == 104 ){ //new phi range
+          ++subsection;
+          line = 1;
+          getline(flux_stream, junk);
+          if (subsection == 13) //new costheta range
+          {
+            ++section;
+            subsection = 1;
+          }
+        }
+      }
+      if( flux>0.0 ){
+        LOG("Flux", pINFO)
+          << "Flux[Ev = " << energy 
+          << ", cos8 = " << costheta << "] = " << flux;
+        // note: reversing the Fluka sign convention for zenith angle
+        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta) );   
+        histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
+      }
+    }
+  } else {
+    LOG("FLUX", pERROR) 
+      << "PDG code is not a neutrino type supported by this file.";
   }
   return true;
 }

@@ -440,10 +440,13 @@ bool GAtmoFlux::LoadFluxData(void)
       hist = this->CreateFluxHisto2D(pname.c_str(), pname.c_str());
       fFluxRaw2D.insert( map<int,TH2D*>::value_type(nu_pdg,hist) );
     }
-
-    bool loaded = this->FillFluxHisto2D(hist, filename);
-
-    loading_status = loading_status && loaded;
+    //if of GHonda type, allow for taking different neutrino type from same file
+    if(typeid.(this)==typeid(GHondaAtmoFlux*)){
+      bool loaded = this->Fill(hist, filename, nu_pdg);
+    } else {
+      bool loaded = this->FillFluxHisto2D(hist, filename);
+    }
+     loading_status = loading_status && loaded;
   }
 
   if(loading_status) {
