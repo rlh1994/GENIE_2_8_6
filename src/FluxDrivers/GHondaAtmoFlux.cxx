@@ -29,7 +29,7 @@
 #include <TH2D.h>
 #include <TMath.h>
 
-#include "FluxDrivers/GHondaAtmo3DFlux.h"
+#include "FluxDrivers/GHondaAtmoFlux.h"
 #include "Messenger/Messenger.h"
 
 using std::ifstream;
@@ -38,7 +38,7 @@ using namespace genie;
 using namespace genie::flux;
 
 //____________________________________________________________________________
-GFlukaAtmo3DFlux::GFlukaAtmo3DFlux() :
+GHondaAtmoFlux::GHondaAtmoFlux() :
 GAtmoFlux()
 {
   LOG("Flux", pNOTICE)
@@ -48,12 +48,12 @@ GAtmoFlux()
   this->Initialize();
 }
 //___________________________________________________________________________
-GFlukaAtmo3DFlux::~GFlukaAtmo3DFlux()
+GHondaAtmoFlux::~GHondaAtmoFlux()
 {
 
 }
 //___________________________________________________________________________
-void GFlukaAtmo3DFlux::SetBinSizes(void)
+void GHondaAtmoFlux::SetBinSizes(void)
 {
 // Generate the correct cos(theta) and energy bin sizes
 // The flux is given in 40 bins of cos(zenith angle) from -1.0 to 1.0
@@ -61,53 +61,53 @@ void GFlukaAtmo3DFlux::SetBinSizes(void)
 // per decade), with Emin = 0.100 GeV.
 //
 
-  fCosThetaBins  = new double [kGFlk3DNumCosThetaBins  + 1];
-  fEnergyBins    = new double [kGFlk3DNumLogEvBins     + 1];
+  fCosThetaBins  = new double [kGHondaNumCosThetaBins  + 1];
+  fEnergyBins    = new double [kGHondaNumLogEvBins     + 1];
 
   double dcostheta = 
-      (kGFlk3DCosThetaMax - kGFlk3DCosThetaMin) /
-      (double) kGFlk3DNumCosThetaBins;
+      (kGHondaCosThetaMax - kGHondaCosThetaMin) /
+      (double) kGHondaNumCosThetaBins;
 
   double logEmax = TMath::Log10(1.);
-  double logEmin = TMath::Log10(kGFlk3DEvMin);
+  double logEmin = TMath::Log10(kGHondaEvMin);
   double dlogE = 
       (logEmax - logEmin) / 
-      (double) kGFlk3DNumLogEvBinsPerDecade;
+      (double) kGHondaNumLogEvBinsPerDecade;
 
-  for(unsigned int i=0; i<= kGFlk3DNumCosThetaBins; i++) {
-     fCosThetaBins[i] = kGFlk3DCosThetaMin + i * dcostheta;
-     if(i != kGFlk3DNumCosThetaBins) {
+  for(unsigned int i=0; i<= kGHondaNumCosThetaBins; i++) {
+     fCosThetaBins[i] = kGHondaCosThetaMin + i * dcostheta;
+     if(i != kGHondaNumCosThetaBins) {
        LOG("Flux", pDEBUG) 
          << "FLUKA 3d flux: CosTheta bin " << i+1 
          << ": lower edge = " << fCosThetaBins[i];
      } else {
        LOG("Flux", pDEBUG) 
-         << "FLUKA 3d flux: CosTheta bin " << kGFlk3DNumCosThetaBins 
-         << ": upper edge = " << fCosThetaBins[kGFlk3DNumCosThetaBins];
+         << "FLUKA 3d flux: CosTheta bin " << kGHondaNumCosThetaBins 
+         << ": upper edge = " << fCosThetaBins[kGHondaNumCosThetaBins];
      }
   }
 
-  for(unsigned int i=0; i<= kGFlk3DNumLogEvBins; i++) {
+  for(unsigned int i=0; i<= kGHondaNumLogEvBins; i++) {
      fEnergyBins[i] = TMath::Power(10., logEmin + i*dlogE);
-     if(i != kGFlk3DNumLogEvBins) {
+     if(i != kGHondaNumLogEvBins) {
        LOG("Flux", pDEBUG) 
          << "FLUKA 3d flux: Energy bin " << i+1 
          << ": lower edge = " << fEnergyBins[i];
      } else {
        LOG("Flux", pDEBUG) 
-         << "FLUKA 3d flux: Energy bin " << kGFlk3DNumLogEvBins 
-         << ": upper edge = " << fEnergyBins[kGFlk3DNumLogEvBins];
+         << "FLUKA 3d flux: Energy bin " << kGHondaNumLogEvBins 
+         << ": upper edge = " << fEnergyBins[kGHondaNumLogEvBins];
      }
   }
 
-  for(unsigned int i=0; i< kGFlk3DNumLogEvBins; i++) {
+  for(unsigned int i=0; i< kGHondaNumLogEvBins; i++) {
        LOG("Flux", pDEBUG) 
          << "FLUKA 3d flux: Energy bin " << i+1
          << ": bin centre = " << (fEnergyBins[i] + fEnergyBins[i+1])/2.;
   }
 
-  fNumCosThetaBins = kGFlk3DNumCosThetaBins;
-  fNumEnergyBins   = kGFlk3DNumLogEvBins;
+  fNumCosThetaBins = kGHondaNumCosThetaBins;
+  fNumEnergyBins   = kGHondaNumLogEvBins;
 }
 //____________________________________________________________________________
 bool GFlukaAtmo3DFlux::FillFluxHisto2D(TH2D * histo, string filename)
