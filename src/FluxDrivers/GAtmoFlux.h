@@ -119,13 +119,13 @@ protected:
   TH2D* CreateNormalisedFluxHisto2D( TH2D* h2 );
 
   // pure virtual protected methods; to be implemented by concrete flux drivers
-  virtual bool FillFluxHisto2D   (TH2D * h2, string filename) = 0;
+  virtual bool FillFluxHisto2D   (TH2D * h2, string filename, int pdg_nu = 14) = 0;
 
   // protected data members
   double           fMaxEv;            ///< maximum energy (in input flux files)
   PDGCodeList *    fPdgCList;         ///< input list of neutrino pdg-codes
   int              fgPdgC;            ///< current generated nu pdg-code
-  TLorentzVector   fgP4;              ///< current generated nu 4-momentum    +   
+  TLorentzVector   fgP4;              ///< current generated nu 4-momentum
   TLorentzVector   fgX4;              ///< current generated nu 4-position
   double           fWeight;           ///< current generated nu weight
   long int         fNNeutrinos;       ///< number of flux neutrinos thrown so far

@@ -45,6 +45,8 @@
 #include <TH2D.h>
 #include <TMath.h>
 
+#include <typeinfo>
+
 #include "Conventions/Constants.h"
 #include "FluxDrivers/GAtmoFlux.h"
 #include "Messenger/Messenger.h"
@@ -54,6 +56,7 @@
 #include "PDG/PDGUtils.h"
 #include "PDG/PDGLibrary.h"
 #include "Utils/PrintUtils.h"
+#include "GHondaAtmoFlux.h"
 
 using namespace genie;
 using namespace genie::flux;
@@ -440,12 +443,10 @@ bool GAtmoFlux::LoadFluxData(void)
       hist = this->CreateFluxHisto2D(pname.c_str(), pname.c_str());
       fFluxRaw2D.insert( map<int,TH2D*>::value_type(nu_pdg,hist) );
     }
-    //if of GHonda type, allow for taking different neutrino type from same file
-    if(typeid.(this)==typeid(GHondaAtmoFlux*)){
-      bool loaded = this->Fill(hist, filename, nu_pdg);
-    } else {
-      bool loaded = this->FillFluxHisto2D(hist, filename);
-    }
+
+    //Pass type of neutrino now as needed for HONDA flux files
+    bool loaded = this->FillFluxHisto2D(hist, filename, nu_pdg);
+
      loading_status = loading_status && loaded;
   }
 

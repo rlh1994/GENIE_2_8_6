@@ -135,6 +135,8 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, int pdg_nu)
   ofstream data_test("datatest.dat", ios::out);
   double scale = 1.0; // 1.0 [m^2], OR 1.0e-4 [cm^2]
 
+  data_test << pdg_nu << std::endl;
+
   if(pdg_nu == 14){
     while ( flux_stream ) {
       flux = 0.0;
@@ -158,6 +160,9 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, int pdg_nu)
           }
         }
       }
+
+      data_test << costheta << " " << phi << " " << energy << " " << flux << std::endl;
+
       if( flux>0.0 ){
         LOG("Flux", pINFO)
           << "Flux[Ev = " << energy 
@@ -190,6 +195,9 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, int pdg_nu)
           }
         }
       }
+
+      data_test << costheta << " " << phi << " " << energy << " " << flux << std::endl;
+
       if( flux>0.0 ){
         LOG("Flux", pINFO)
           << "Flux[Ev = " << energy 
@@ -222,6 +230,9 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, int pdg_nu)
           }
         }
       }
+
+      data_test << costheta << " " << phi << " " << energy << " " << flux << std::endl;
+
       if( flux>0.0 ){
         LOG("Flux", pINFO)
           << "Flux[Ev = " << energy 
@@ -254,6 +265,9 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, int pdg_nu)
           }
         }
       }
+
+      data_test << costheta << " " << phi << " " << energy << " " << flux << std::endl;
+
       if( flux>0.0 ){
         LOG("Flux", pINFO)
           << "Flux[Ev = " << energy 
