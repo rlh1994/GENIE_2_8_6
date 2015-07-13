@@ -44,7 +44,7 @@ namespace genie {
 namespace flux  {
 
 // Number of cos(zenith) and energy bins in flux simulation
-const unsigned int kGHondaNumCosThetaBins       = 20;
+const unsigned int kGHondaNumCosThetaBins       = 20; 
 const double       kGHondaCosThetaMin           = -1.0;
 const double       kGHondaCosThetaMax           =  1.0;
 const unsigned int kGHondaNumLogEvBins          = 101;
@@ -66,7 +66,7 @@ public :
 private:
 
   void SetBinSizes    (void);
-  bool FillFluxHisto2D(TH2D * h2, string filename, int pdg_nu);
+  bool FillFluxHisto2D(TH2D * h2, string filename, const int& pdg_nu);
 };
 
 } // flux namespace

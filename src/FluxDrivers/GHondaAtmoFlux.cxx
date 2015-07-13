@@ -111,7 +111,7 @@ void GHondaAtmoFlux::SetBinSizes(void)
   fNumEnergyBins   = kGHondaNumLogEvBins;
 }
 //____________________________________________________________________________
-bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, int pdg_nu)
+bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& pdg_nu)
 {
   LOG("Flux", pNOTICE) << "Loading: " << filename;
 
@@ -240,14 +240,13 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, int pdg_nu)
         flux_stream >> energy >> junk >> junk >> junk >> flux; //currently only reads NuMu
         line++;
         costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
-            //section of data we are in, this gives middle value
-        phi = -15 + (subsection * 30); //phi known by subsection, again gives middle value
+                                            //section of data we are in, this gives middle value
+        phi = -15 + (subsection * 30);  //phi known by subsection, again gives middle value
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
           getline(flux_stream, junk);
-          if (subsection == 13) //new costheta range
-          {
+          if (subsection == 13){ //new costheta range
             ++section;
             subsection = 1;
           }
@@ -257,7 +256,7 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, int pdg_nu)
         LOG("Flux", pINFO)
           << "Flux[Ev = " << energy 
           << ", cos8 = " << costheta << "] = " << flux;
-        // note: reversing the Fluka sign convention for zenith angle
+        // note: reversing the Honda sign convention for zenith angle
         ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta) );   
         histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
       }

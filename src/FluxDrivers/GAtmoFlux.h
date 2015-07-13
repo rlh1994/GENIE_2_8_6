@@ -119,7 +119,7 @@ protected:
   TH2D* CreateNormalisedFluxHisto2D( TH2D* h2 );
 
   // pure virtual protected methods; to be implemented by concrete flux drivers
-  virtual bool FillFluxHisto2D   (TH2D * h2, string filename, int pdg_nu = 14) = 0;
+  virtual bool FillFluxHisto2D   (TH2D * h2, string filename, const int& pdg_nu) = 0;
 
   // protected data members
   double           fMaxEv;            ///< maximum energy (in input flux files)

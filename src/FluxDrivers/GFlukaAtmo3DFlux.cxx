@@ -110,7 +110,7 @@ void GFlukaAtmo3DFlux::SetBinSizes(void)
   fNumEnergyBins   = kGFlk3DNumLogEvBins;
 }
 //____________________________________________________________________________
-bool GFlukaAtmo3DFlux::FillFluxHisto2D(TH2D * histo, string filename, int pdg_nu)
+bool GFlukaAtmo3DFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& pdg_nu)
 {
   LOG("Flux", pNOTICE) << "Loading: " << filename;
 

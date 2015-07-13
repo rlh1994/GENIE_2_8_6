@@ -45,8 +45,6 @@
 #include <TH2D.h>
 #include <TMath.h>
 
-#include <typeinfo>
-
 #include "Conventions/Constants.h"
 #include "FluxDrivers/GAtmoFlux.h"
 #include "Messenger/Messenger.h"
