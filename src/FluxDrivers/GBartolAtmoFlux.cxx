@@ -70,15 +70,15 @@ void GBartolAtmoFlux::SetBinSizes(void)
      
   fCosThetaBins  = new double [kBGLRS3DNumCosThetaBins + 1];
   fEnergyBins    = new double [kBGLRS3DNumLogEvBinsLow + kBGLRS3DNumLogEvBinsHigh + 1];
-  fPhiBins       = new double [kGHondaNumPhiBins       + 1];
+  fPhiBins       = new double [kBGLRS3DNumPhiBins       + 1];
    
   double dcostheta =
       (kBGLRS3DCosThetaMax - kBGLRS3DCosThetaMin) / 
       (double) kBGLRS3DNumCosThetaBins;
 
   double dphi = 
-    (kGHondaPhiMax - kGHondaPhiMin) /
-    (double) kGHondaNumPhiBins;
+    (kBGLRS3DPhiMax - kBGLRS3DPhiMin) /
+    (double) kBGLRS3DNumPhiBins;
      
   double logEmin = TMath::Log10(kBGLRS3DEvMin);
   double dlogElow = 1.0 / (double) kBGLRS3DNumLogEvBinsPerDecadeLow;
@@ -101,16 +101,16 @@ void GBartolAtmoFlux::SetBinSizes(void)
     }
   }
 
-  for(unsigned int i=0; i<= kGHondaNumPhiBins; i++) {
-     fPhiBins[i] = kGHondaPhiMin + i * dphi;
-     if(i != kGHondaNumPhiBins) {
+  for(unsigned int i=0; i<= kBGLRS3DNumPhiBins; i++) {
+     fPhiBins[i] = kBGLRS3DPhiMin + i * dphi;
+     if(i != kBGLRS3DNumPhiBins) {
        LOG("Flux", pDEBUG) 
          << "Honda flux: Phi bin " << i+1 
          << ": lower edge = " << fPhiBins[i];
      } else {
        LOG("Flux", pDEBUG) 
-         << "Honda flux: Phi bin " << kGHondaNumPhiBins 
-         << ": upper edge = " << fPhiBins[kGHondaNumPhiBins];
+         << "Honda flux: Phi bin " << kBGLRS3DNumPhiBins 
+         << ": upper edge = " << fPhiBins[kBGLRS3DNumPhiBins];
      }
   }
      
@@ -134,7 +134,7 @@ void GBartolAtmoFlux::SetBinSizes(void)
 
   fNumCosThetaBins = kBGLRS3DNumCosThetaBins;
   fNumEnergyBins   = kBGLRS3DNumLogEvBinsLow + kBGLRS3DNumLogEvBinsHigh; 
-  fNumPhiBins      = kGHondaNumPhiBins;
+  fNumPhiBins      = kBGLRS3DNumPhiBins;
 }
 //___________________________________________________________________________
 bool GBartolAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& pdg_nu)
@@ -166,7 +166,7 @@ bool GBartolAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& 
   while ( !flux_stream.eof() ) {
     flux = 0.0;
     flux_stream >> energy >> costheta >> flux >> junkd >> junkd;
-    phi = 2*TMath::Pi* rnd->RndFlux().Rndm();
+    phi = 2.0*TMath::Pi()* rnd->RndFlux().Rndm();
     if( flux>0.0 ){
       // Compensate for logarithmic units - dlogE=dE/E
       // [Note: should do this explicitly using bin widths]

@@ -26,7 +26,7 @@
 #include <cassert>
 #include <fstream>
 
-#include <TH2D.h>
+#include <TH3D.h>
 #include <TMath.h>
 
 #include "FluxDrivers/GFlukaAtmo3DFlux.h"
@@ -65,15 +65,15 @@ void GFlukaAtmo3DFlux::SetBinSizes(void)
 
   fCosThetaBins  = new double [kGFlk3DNumCosThetaBins  + 1];
   fEnergyBins    = new double [kGFlk3DNumLogEvBins     + 1];
-  fPhiBins       = new double [kGHondaNumPhiBins       + 1];
+  fPhiBins       = new double [kGFlk3DNumPhiBins       + 1];
 
   double dcostheta = 
       (kGFlk3DCosThetaMax - kGFlk3DCosThetaMin) /
       (double) kGFlk3DNumCosThetaBins;
 
   double dphi = 
-    (kGHondaPhiMax - kGHondaPhiMin) /
-    (double) kGHondaNumPhiBins;
+    (kGFlk3DPhiMax - kGFlk3DPhiMin) /
+    (double) kGFlk3DNumPhiBins;
 
   double logEmax = TMath::Log10(1.);
   double logEmin = TMath::Log10(kGFlk3DEvMin);
@@ -94,16 +94,16 @@ void GFlukaAtmo3DFlux::SetBinSizes(void)
      }
   }
 
-  for(unsigned int i=0; i<= kGHondaNumPhiBins; i++) {
-     fPhiBins[i] = kGHondaPhiMin + i * dphi;
-     if(i != kGHondaNumPhiBins) {
+  for(unsigned int i=0; i<= kGFlk3DNumPhiBins; i++) {
+     fPhiBins[i] = kGFlk3DPhiMin + i * dphi;
+     if(i != kGFlk3DNumPhiBins) {
        LOG("Flux", pDEBUG) 
-         << "Honda flux: Phi bin " << i+1 
+         << "FLUKA flux: Phi bin " << i+1 
          << ": lower edge = " << fPhiBins[i];
      } else {
        LOG("Flux", pDEBUG) 
-         << "Honda flux: Phi bin " << kGHondaNumPhiBins 
-         << ": upper edge = " << fPhiBins[kGHondaNumPhiBins];
+         << "FLUKA flux: Phi bin " << kGFlk3DNumPhiBins 
+         << ": upper edge = " << fPhiBins[kGFlk3DNumPhiBins];
      }
   }
 
@@ -128,10 +128,10 @@ void GFlukaAtmo3DFlux::SetBinSizes(void)
 
   fNumCosThetaBins = kGFlk3DNumCosThetaBins;
   fNumEnergyBins   = kGFlk3DNumLogEvBins;
-  fNumPhiBins      = kGHondaNumPhiBins;
+  fNumPhiBins      = kGFlk3DNumPhiBins;
 }
 //____________________________________________________________________________
-bool GFlukaAtmo3DFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& pdg_nu)
+bool GFlukaAtmo3DFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& pdg_nu)
 {
   LOG("Flux", pNOTICE) << "Loading: " << filename;
 
@@ -156,7 +156,7 @@ bool GFlukaAtmo3DFlux::FillFluxHisto2D(TH2D * histo, string filename, const int&
   while ( !flux_stream.eof() ) {
     flux = 0.0;
     flux_stream >> energy >> j1 >> costheta >> j2 >> flux;
-    phi = 2*TMath::Pi* rnd->RndFlux().Rndm();
+    phi = 2.0*TMath::Pi()* rnd->RndFlux().Rndm();
     if( flux>0.0 ){
       LOG("Flux", pINFO)
         << "Flux[Ev = " << energy 

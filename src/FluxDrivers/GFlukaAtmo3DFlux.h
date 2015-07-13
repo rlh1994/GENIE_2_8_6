@@ -53,7 +53,7 @@ const unsigned int kGFlk3DNumLogEvBinsPerDecade = 20;
 const double       kGFlk3DEvMin                 = 0.100; // GeV
 const unsigned int kGFlk3DNumPhiBins            = 12; 
 const double       kGFlk3DPhiMin                = 0.0;
-const double       kGFlk3DPhiMax                = 2*TMath::Pi;
+const double       kGFlk3DPhiMax                = 2.0*TMath::Pi();
 
 class GFlukaAtmo3DFlux: public GAtmoFlux {
 

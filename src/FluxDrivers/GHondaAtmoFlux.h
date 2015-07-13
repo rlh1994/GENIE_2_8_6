@@ -53,7 +53,7 @@ const unsigned int kGHondaNumLogEvBinsPerDecade = 20;
 const double       kGHondaEvMin                 = 0.100; // GeV
 const unsigned int kGHondaNumPhiBins            = 12; 
 const double       kGHondaPhiMin                = 0.0;
-const double       kGHondaPhiMax                = 2*TMath::Pi;
+const double       kGHondaPhiMax                = 2.0*TMath::Pi();
 
 class GHondaAtmoFlux: public GAtmoFlux {
 

@@ -114,7 +114,7 @@ protected:
   TH3D *  CreateFluxHisto3D (string name, string title);
   void    ZeroFluxHisto3D   (TH3D * h3);
   void    AddAllFluxes      (void);
-  int     SelectNeutrino    (double Ev, double costheta);
+  int     SelectNeutrino    (double Ev, double costheta, double phi);
   
   // normalise flux files
   TH3D* CreateNormalisedFluxHisto3D( TH3D* h3 );
@@ -137,7 +137,7 @@ protected:
   TRotation        fRotTHz2User;      ///< coord. system rotation: THZ -> Topocentric user-defined
   unsigned int     fNumCosThetaBins;  ///< number of cos(theta) bins in input flux data files
   unsigned int     fNumEnergyBins;    ///< number of energy bins in input flux data files
-  unsigned int     fNumPhiBins        ///< number of phi bins in input data files
+  unsigned int     fNumPhiBins;       ///< number of phi bins in input data files
   double *         fCosThetaBins;     ///< cos(theta) bins in input flux data files
   double *         fEnergyBins;       ///< energy bins in input flux data files
   double *         fPhiBins;          ///< phi bins in input flux data files

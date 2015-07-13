@@ -150,7 +150,7 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
   std::string junk;
   section = subsection = line = 1; //initialising some values
   costheta= 0.95;
-  phi = 2*Tmath::Pi(15/360); 
+  phi = 2*TMath::Pi()*(15/360); 
 
   double scale = 1.0; // 1.0 [m^2], OR 1.0e-4 [cm^2]
 
@@ -165,7 +165,7 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
         line++;
         costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
             //section of data we are in, this gives middle value
-        phi = 2*TMath::Pi((-15 + (subsection * 30))/360); //phi known by subsection, again gives middle value
+        phi = 2*TMath::Pi()*((-15 + (subsection * 30))/360); //phi known by subsection, again gives middle value
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -197,7 +197,7 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
         line++;
         costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
             //section of data we are in, this gives middle value
-        phi = 2*TMath::Pi((-15 + (subsection * 30))/360); //phi known by subsection, again gives middle value
+        phi = 2*TMath::Pi()*((-15 + (subsection * 30))/360); //phi known by subsection, again gives middle value
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -229,7 +229,7 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
         line++;
         costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
             //section of data we are in, this gives middle value
-        phi = 2*TMath::Pi((-15 + (subsection * 30))/360); //phi known by subsection, again gives middle value
+        phi = 2*TMath::Pi()*((-15 + (subsection * 30))/360); //phi known by subsection, again gives middle value
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -261,7 +261,7 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
         line++;
         costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
                                             //section of data we are in, this gives middle value
-        phi = 2*TMath::Pi((-15 + (subsection * 30))/360);  //phi known by subsection, again gives middle value
+        phi = 2*TMath::Pi()*((-15 + (subsection * 30))/360);  //phi known by subsection, again gives middle value
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
