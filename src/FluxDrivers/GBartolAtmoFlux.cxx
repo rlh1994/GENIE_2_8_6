@@ -52,10 +52,12 @@ GBartolAtmoFlux::~GBartolAtmoFlux()
 //___________________________________________________________________________
 void GBartolAtmoFlux::SetBinSizes(void)
 {
-// Generate the correct cos(theta) and energy bin sizes.
+// Generate the correct cos(theta), phi and energy bin sizes.
 //
 // Zenith angle binning: the flux is given in 20 bins of 
 // cos(zenith angle) from -1.0 to 1.0 (bin width = 0.1) 
+
+// 12 bins of phi angle from 0 to 2Pi (bin width = Pi/6) 
 //
 // Neutrino energy binning: the Bartol flux files are 
 // provided in two pieces 
@@ -68,10 +70,15 @@ void GBartolAtmoFlux::SetBinSizes(void)
      
   fCosThetaBins  = new double [kBGLRS3DNumCosThetaBins + 1];
   fEnergyBins    = new double [kBGLRS3DNumLogEvBinsLow + kBGLRS3DNumLogEvBinsHigh + 1];
+  fPhiBins       = new double [kGHondaNumPhiBins       + 1];
    
   double dcostheta =
       (kBGLRS3DCosThetaMax - kBGLRS3DCosThetaMin) / 
       (double) kBGLRS3DNumCosThetaBins;
+
+  double dphi = 
+    (kGHondaPhiMax - kGHondaPhiMin) /
+    (double) kGHondaNumPhiBins;
      
   double logEmin = TMath::Log10(kBGLRS3DEvMin);
   double dlogElow = 1.0 / (double) kBGLRS3DNumLogEvBinsPerDecadeLow;
@@ -92,6 +99,19 @@ void GBartolAtmoFlux::SetBinSizes(void)
         << "FLUKA 3d flux: CosTheta bin " << kBGLRS3DNumCosThetaBins
         << ": upper edge = " << fCosThetaBins[kBGLRS3DNumCosThetaBins];
     }
+  }
+
+  for(unsigned int i=0; i<= kGHondaNumPhiBins; i++) {
+     fPhiBins[i] = kGHondaPhiMin + i * dphi;
+     if(i != kGHondaNumPhiBins) {
+       LOG("Flux", pDEBUG) 
+         << "Honda flux: Phi bin " << i+1 
+         << ": lower edge = " << fPhiBins[i];
+     } else {
+       LOG("Flux", pDEBUG) 
+         << "Honda flux: Phi bin " << kGHondaNumPhiBins 
+         << ": upper edge = " << fPhiBins[kGHondaNumPhiBins];
+     }
   }
      
   double logE = logEmin;
@@ -114,6 +134,7 @@ void GBartolAtmoFlux::SetBinSizes(void)
 
   fNumCosThetaBins = kBGLRS3DNumCosThetaBins;
   fNumEnergyBins   = kBGLRS3DNumLogEvBinsLow + kBGLRS3DNumLogEvBinsHigh; 
+  fNumPhiBins      = kGHondaNumPhiBins;
 }
 //___________________________________________________________________________
 bool GBartolAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& pdg_nu)

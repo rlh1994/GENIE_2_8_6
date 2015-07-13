@@ -56,18 +56,24 @@ GHondaAtmoFlux::~GHondaAtmoFlux()
 //___________________________________________________________________________
 void GHondaAtmoFlux::SetBinSizes(void)
 {
-// Generate the correct cos(theta) and energy bin sizes
-// The flux is given in 40 bins of cos(zenith angle) from -1.0 to 1.0
-// (bin width = 0.05) and 61 equally log-spaced energy bins (20 bins 
+// Generate the correct cos(theta), energy and phi bin sizes
+// The flux is given in 20 bins of cos(zenith angle) from -1.0 to 1.0
+// (bin width = 0.1), 12 bins of phi angle from 0 to 2Pi (bin width = Pi/6) 
+// and 61 equally log-spaced energy bins (20 bins 
 // per decade), with Emin = 0.100 GgeV.
 //
 
   fCosThetaBins  = new double [kGHondaNumCosThetaBins  + 1];
   fEnergyBins    = new double [kGHondaNumLogEvBins     + 1];
+  fPhiBins       = new double [kGHondaNumPhiBins       + 1];
 
   double dcostheta = 
       (kGHondaCosThetaMax - kGHondaCosThetaMin) /
       (double) kGHondaNumCosThetaBins;
+
+  double dphi = 
+    (kGHondaPhiMax - kGHondaPhiMin) /
+    (double) kGHondaNumPhiBins;
 
   double logEmax = TMath::Log10(1.);
   double logEmin = TMath::Log10(kGHondaEvMin);
@@ -85,6 +91,19 @@ void GHondaAtmoFlux::SetBinSizes(void)
        LOG("Flux", pDEBUG) 
          << "FLUKA 3d flux: CosTheta bin " << kGHondaNumCosThetaBins 
          << ": upper edge = " << fCosThetaBins[kGHondaNumCosThetaBins];
+     }
+  }
+
+  for(unsigned int i=0; i<= kGHondaNumPhiBins; i++) {
+     fPhiBins[i] = kGHondaPhiMin + i * dphi;
+     if(i != kGHondaNumPhiBins) {
+       LOG("Flux", pDEBUG) 
+         << "Honda flux: Phi bin " << i+1 
+         << ": lower edge = " << fPhiBins[i];
+     } else {
+       LOG("Flux", pDEBUG) 
+         << "Honda flux: Phi bin " << kGHondaNumPhiBins 
+         << ": upper edge = " << fPhiBins[kGHondaNumPhiBins];
      }
   }
 
@@ -109,6 +128,7 @@ void GHondaAtmoFlux::SetBinSizes(void)
 
   fNumCosThetaBins = kGHondaNumCosThetaBins;
   fNumEnergyBins   = kGHondaNumLogEvBins;
+  fNumPhiBins      = kGHondaNumPhiBins;
 }
 //____________________________________________________________________________
 bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& pdg_nu)
