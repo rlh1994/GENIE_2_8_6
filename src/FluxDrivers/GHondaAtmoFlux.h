@@ -39,6 +39,7 @@
 #define _GHONDA_ATMO_FLUX_I_H_
 
 #include "FluxDrivers/GAtmoFlux.h"
+#include <TMath.h>
 
 namespace genie {
 namespace flux  {
@@ -50,6 +51,9 @@ const double       kGHondaCosThetaMax           =  1.0;
 const unsigned int kGHondaNumLogEvBins          = 101;
 const unsigned int kGHondaNumLogEvBinsPerDecade = 20;
 const double       kGHondaEvMin                 = 0.100; // GeV
+const unsigned int kGHondaNumPhiBins            = 12; 
+const double       kGHondaPhiMin                = 0.0;
+const double       kGHondaPhiMax                = 2*TMath::Pi;
 
 class GHondaAtmoFlux: public GAtmoFlux {
 
@@ -66,7 +70,7 @@ public :
 private:
 
   void SetBinSizes    (void);
-  bool FillFluxHisto2D(TH2D * h2, string filename, const int& pdg_nu);
+  bool FillFluxHisto3D(TH3D * h3, string filename, const int& pdg_nu);
 };
 
 } // flux namespace

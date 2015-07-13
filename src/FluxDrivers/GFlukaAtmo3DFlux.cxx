@@ -31,6 +31,7 @@
 
 #include "FluxDrivers/GFlukaAtmo3DFlux.h"
 #include "Messenger/Messenger.h"
+#include "Numerical/RandomGen.h"
 
 using std::ifstream;
 using std::ios;
@@ -127,18 +128,22 @@ bool GFlukaAtmo3DFlux::FillFluxHisto2D(TH2D * histo, string filename, const int&
   int    ibin;
   double energy, costheta, flux;
   char   j1, j2;
+  RandomGen * rnd = RandomGen::Instance();
+  double phi = 0;
 
   double scale = 1.0; // 1.0 [m^2], OR 1.0e-4 [cm^2]
 
   while ( !flux_stream.eof() ) {
     flux = 0.0;
     flux_stream >> energy >> j1 >> costheta >> j2 >> flux;
+    phi = 2*TMath::Pi* rnd->RndFlux().Rndm();
     if( flux>0.0 ){
       LOG("Flux", pINFO)
         << "Flux[Ev = " << energy 
-        << ", cos8 = " << costheta << "] = " << flux;
+        << ", cos8 = " << costheta 
+        << ", phi = " << phi << "] = " << flux;;
       // note: reversing the Fluka sign convention for zenith angle
-      ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta) );   
+      ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta), (Axis_t)phi );   
       histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
     }
   }

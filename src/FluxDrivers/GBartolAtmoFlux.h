@@ -56,6 +56,9 @@ const unsigned int kBGLRS3DNumLogEvBinsPerDecadeLow  = 20;
 const unsigned int kBGLRS3DNumLogEvBinsHigh          = 30;
 const unsigned int kBGLRS3DNumLogEvBinsPerDecadeHigh = 10;
 const double       kBGLRS3DEvMin                     = 0.1; // GeV
+const unsigned int kBGLRS3DNumPhiBins                = 12; 
+const double       kBGLRS3DPhiMin                    = 0.0;
+const double       kBGLRS3DPhiMax                    = 2*TMath::Pi;
 
 class GBartolAtmoFlux: public GAtmoFlux {
 
@@ -72,7 +75,7 @@ public :
 private:
 
   void SetBinSizes     (void);
-  bool FillFluxHisto2D (TH2D * h2, string filename, const int& pdg_nu);
+  bool FillFluxHisto3D (TH3D * h3, string filename, const int& pdg_nu);
 };
 
 } // flux namespace

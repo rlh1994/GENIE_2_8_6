@@ -39,6 +39,7 @@
 #define _GFLUKA_ATMO_3D_FLUX_I_H_
 
 #include "FluxDrivers/GAtmoFlux.h"
+#include <TMath.h>
 
 namespace genie {
 namespace flux  {
@@ -50,6 +51,9 @@ const double       kGFlk3DCosThetaMax           =  1.0;
 const unsigned int kGFlk3DNumLogEvBins          = 61;
 const unsigned int kGFlk3DNumLogEvBinsPerDecade = 20;
 const double       kGFlk3DEvMin                 = 0.100; // GeV
+const unsigned int kGFlk3DNumPhiBins            = 12; 
+const double       kGFlk3DPhiMin                = 0.0;
+const double       kGFlk3DPhiMax                = 2*TMath::Pi;
 
 class GFlukaAtmo3DFlux: public GAtmoFlux {
 
@@ -66,7 +70,7 @@ public :
 private:
 
   void SetBinSizes    (void);
-  bool FillFluxHisto2D(TH2D * h2, string filename, const int& pdg_nu);
+  bool FillFluxHisto3D(TH3D * h3, string filename, const int& pdg_nu);
 };
 
 } // flux namespace

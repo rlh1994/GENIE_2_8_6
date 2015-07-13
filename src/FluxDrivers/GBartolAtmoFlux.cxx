@@ -21,11 +21,12 @@
 #include <fstream>
 #include <cassert>
 
-#include <TH2D.h>
+#include <TH3D.h>
 #include <TMath.h>
 
 #include "FluxDrivers/GBartolAtmoFlux.h"
 #include "Messenger/Messenger.h"
+#include "Numerical/RandomGen.h"
 
 using std::ifstream;
 using std::ios;
@@ -115,7 +116,7 @@ void GBartolAtmoFlux::SetBinSizes(void)
   fNumEnergyBins   = kBGLRS3DNumLogEvBinsLow + kBGLRS3DNumLogEvBinsHigh; 
 }
 //___________________________________________________________________________
-bool GBartolAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& pdg_nu)
+bool GBartolAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& pdg_nu)
 {
   LOG("Flux", pNOTICE) << "Loading: " << filename;
 
@@ -135,20 +136,25 @@ bool GBartolAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& 
 
   double scale = 1.0; // 1.0 [m^2], OR 1.0e-4 [cm^2]
 
+  RandomGen * rnd = RandomGen::Instance();
+  double phi = 0;
+
   // throw away comment line
   flux_stream.ignore(99999, '\n');
 
   while ( !flux_stream.eof() ) {
     flux = 0.0;
     flux_stream >> energy >> costheta >> flux >> junkd >> junkd;
+    phi = 2*TMath::Pi* rnd->RndFlux().Rndm();
     if( flux>0.0 ){
       // Compensate for logarithmic units - dlogE=dE/E
       // [Note: should do this explicitly using bin widths]
       flux /= energy;
       LOG("Flux", pINFO)
         << "Flux[Ev = " << energy 
-        << ", cos8 = " << costheta << "] = " << flux;
-      ibin = histo->FindBin( (Axis_t)energy, (Axis_t)costheta );
+        << ", cos8 = " << costheta 
+        << ", phi = " << phi << "] = " << flux;
+      ibin = histo->FindBin( (Axis_t)energy, (Axis_t)costheta, (Axis_t)phi );
       histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
     }
   }

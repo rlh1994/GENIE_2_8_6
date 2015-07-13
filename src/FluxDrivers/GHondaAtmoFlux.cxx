@@ -27,7 +27,7 @@
 #include <fstream>
 #include <string>
 
-#include <TH2D.h>
+#include <TH3D.h>
 #include <TMath.h>
 
 #include "FluxDrivers/GHondaAtmoFlux.h"
@@ -111,7 +111,7 @@ void GHondaAtmoFlux::SetBinSizes(void)
   fNumEnergyBins   = kGHondaNumLogEvBins;
 }
 //____________________________________________________________________________
-bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& pdg_nu)
+bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& pdg_nu)
 {
   LOG("Flux", pNOTICE) << "Loading: " << filename;
 
@@ -130,7 +130,7 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& p
   std::string junk;
   section = subsection = line = 1; //initialising some values
   costheta= 0.95;
-  phi = 15; 
+  phi = 2*Tmath::Pi(15/360); 
 
   double scale = 1.0; // 1.0 [m^2], OR 1.0e-4 [cm^2]
 
@@ -145,7 +145,7 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& p
         line++;
         costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
             //section of data we are in, this gives middle value
-        phi = -15 + (subsection * 30); //phi known by subsection, again gives middle value
+        phi = 2*TMath::Pi((-15 + (subsection * 30))/360); //phi known by subsection, again gives middle value
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -160,9 +160,9 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& p
       if( flux>0.0 ){
         LOG("Flux", pINFO)
           << "Flux[Ev = " << energy 
-          << ", cos8 = " << costheta << "] = " << flux;
-        // note: reversing the Fluka sign convention for zenith angle
-        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta) );   
+          << ", cos8 = " << costheta
+          << ", phi = " << phi << "] = " << flux;
+        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(costheta), (Axis_t)phi );   
         histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
       }
     }
@@ -177,7 +177,7 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& p
         line++;
         costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
             //section of data we are in, this gives middle value
-        phi = -15 + (subsection * 30); //phi known by subsection, again gives middle value
+        phi = 2*TMath::Pi((-15 + (subsection * 30))/360); //phi known by subsection, again gives middle value
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -192,9 +192,9 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& p
       if( flux>0.0 ){
         LOG("Flux", pINFO)
           << "Flux[Ev = " << energy 
-          << ", cos8 = " << costheta << "] = " << flux;
-        // note: reversing the Fluka sign convention for zenith angle
-        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta) );   
+          << ", cos8 = " << costheta
+          << ", phi = " << phi << "] = " << flux;
+        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(costheta), (Axis_t)phi );   
         histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
       }
     }
@@ -209,7 +209,7 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& p
         line++;
         costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
             //section of data we are in, this gives middle value
-        phi = -15 + (subsection * 30); //phi known by subsection, again gives middle value
+        phi = 2*TMath::Pi((-15 + (subsection * 30))/360); //phi known by subsection, again gives middle value
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -224,9 +224,9 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& p
       if( flux>0.0 ){
         LOG("Flux", pINFO)
           << "Flux[Ev = " << energy 
-          << ", cos8 = " << costheta << "] = " << flux;
-        // note: reversing the Fluka sign convention for zenith angle
-        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta) );   
+          << ", cos8 = " << costheta
+          << ", phi = " << phi << "] = " << flux;
+        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(costheta), (Axis_t)phi );   
         histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
       }
     }
@@ -241,7 +241,7 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& p
         line++;
         costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
                                             //section of data we are in, this gives middle value
-        phi = -15 + (subsection * 30);  //phi known by subsection, again gives middle value
+        phi = 2*TMath::Pi((-15 + (subsection * 30))/360);  //phi known by subsection, again gives middle value
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -255,9 +255,9 @@ bool GHondaAtmoFlux::FillFluxHisto2D(TH2D * histo, string filename, const int& p
       if( flux>0.0 ){
         LOG("Flux", pINFO)
           << "Flux[Ev = " << energy 
-          << ", cos8 = " << costheta << "] = " << flux;
-        // note: reversing the Honda sign convention for zenith angle
-        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta) );   
+          << ", cos8 = " << costheta
+          << ", phi = " << phi << "] = " << flux;
+        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(costheta), (Axis_t)phi );   
         histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
       }
     }
