@@ -154,7 +154,6 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
   phi = 2.0*TMath::Pi()*(15.0/360.0); 
 
   double scale = 1.0; // 1.0 [m^2], OR 1.0e-4 [cm^2]
-  
 
   if(pdg_nu == 14){
     while ( flux_stream ) {

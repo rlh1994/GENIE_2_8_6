@@ -112,7 +112,6 @@ bool GAtmoFlux::GenerateNext_1try(void)
   // Generate a (Ev, costheta, phi) triplet from the 'combined' flux histogram
   double Ev       = 0.;
   double costheta = 0.;
-  //this?
   double phi      = 0.;
   double weight   = 0.;
   int    nu_pdg   = 0;
@@ -165,7 +164,6 @@ bool GAtmoFlux::GenerateNext_1try(void)
      Ev       = (double)ax;
      costheta = (double)ay;
      phi      = (double)az;
-     //this?
      nu_pdg   = this->SelectNeutrino(Ev, costheta, phi);
      weight   = 1.0;
   }
@@ -508,8 +506,8 @@ TH3D* GAtmoFlux::CreateNormalisedFluxHisto3D(TH3D* h3)
         dC = ( h3->GetYaxis()->GetBinUpEdge(ny+1)
               - h3->GetYaxis()->GetBinLowEdge(ny+1) );
 
-        dP = ( h3->GetZaxis()->GetBinUpEdge(ny+1)
-              - h3->GetZaxis()->GetBinLowEdge(ny+1) );
+        dP = ( h3->GetZaxis()->GetBinUpEdge(nz+1)
+              - h3->GetZaxis()->GetBinLowEdge(nz+1) );
 
         dN = dN_dEdCdP*dE*dC*dP;
 
