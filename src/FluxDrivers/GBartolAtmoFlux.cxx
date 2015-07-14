@@ -26,7 +26,6 @@
 
 #include "FluxDrivers/GBartolAtmoFlux.h"
 #include "Messenger/Messenger.h"
-#include "Numerical/RandomGen.h"
 
 using std::ifstream;
 using std::ios;
@@ -57,7 +56,6 @@ void GBartolAtmoFlux::SetBinSizes(void)
 // Zenith angle binning: the flux is given in 20 bins of 
 // cos(zenith angle) from -1.0 to 1.0 (bin width = 0.1) 
 
-// 12 bins of phi angle from 0 to 2Pi (bin width = Pi/6) 
 //
 // Neutrino energy binning: the Bartol flux files are 
 // provided in two pieces 
@@ -70,7 +68,10 @@ void GBartolAtmoFlux::SetBinSizes(void)
      
   fCosThetaBins  = new double [kBGLRS3DNumCosThetaBins + 1];
   fEnergyBins    = new double [kBGLRS3DNumLogEvBinsLow + kBGLRS3DNumLogEvBinsHigh + 1];
-  fPhiBins       = new double [kBGLRS3DNumPhiBins       + 1];
+  fPhiBins       = new double [2];
+
+  fPhiBins[0] = 0;
+  fPhiBins[1] = 2.*kPi;
    
   double dcostheta =
       (kBGLRS3DCosThetaMax - kBGLRS3DCosThetaMin) / 
@@ -101,19 +102,6 @@ void GBartolAtmoFlux::SetBinSizes(void)
     }
   }
 
-  for(unsigned int i=0; i<= kBGLRS3DNumPhiBins; i++) {
-     fPhiBins[i] = kBGLRS3DPhiMin + i * dphi;
-     if(i != kBGLRS3DNumPhiBins) {
-       LOG("Flux", pDEBUG) 
-         << "Honda flux: Phi bin " << i+1 
-         << ": lower edge = " << fPhiBins[i];
-     } else {
-       LOG("Flux", pDEBUG) 
-         << "Honda flux: Phi bin " << kBGLRS3DNumPhiBins 
-         << ": upper edge = " << fPhiBins[kBGLRS3DNumPhiBins];
-     }
-  }
-     
   double logE = logEmin;
  
   for(unsigned int i=0; i<=kBGLRS3DNumLogEvBinsLow+kBGLRS3DNumLogEvBinsHigh; i++) {
@@ -134,7 +122,7 @@ void GBartolAtmoFlux::SetBinSizes(void)
 
   fNumCosThetaBins = kBGLRS3DNumCosThetaBins;
   fNumEnergyBins   = kBGLRS3DNumLogEvBinsLow + kBGLRS3DNumLogEvBinsHigh; 
-  fNumPhiBins      = kBGLRS3DNumPhiBins;
+  fNumPhiBins      = 1;
 }
 //___________________________________________________________________________
 bool GBartolAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& pdg_nu)
@@ -157,25 +145,20 @@ bool GBartolAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& 
 
   double scale = 1.0; // 1.0 [m^2], OR 1.0e-4 [cm^2]
 
-  RandomGen * rnd = RandomGen::Instance();
-  double phi = 0;
-
   // throw away comment line
   flux_stream.ignore(99999, '\n');
 
   while ( !flux_stream.eof() ) {
     flux = 0.0;
     flux_stream >> energy >> costheta >> flux >> junkd >> junkd;
-    phi = 2.0*TMath::Pi()* rnd->RndFlux().Rndm();
     if( flux>0.0 ){
       // Compensate for logarithmic units - dlogE=dE/E
       // [Note: should do this explicitly using bin widths]
       flux /= energy;
       LOG("Flux", pINFO)
         << "Flux[Ev = " << energy 
-        << ", cos8 = " << costheta 
-        << ", phi = " << phi << "] = " << flux;
-      ibin = histo->FindBin( (Axis_t)energy, (Axis_t)costheta, (Axis_t)phi );
+        << ", cos8 = " << costheta << flux;
+      ibin = histo->FindBin( (Axis_t)energy, (Axis_t)costheta, (Axis_t)kPi );
       histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
     }
   }
