@@ -109,7 +109,7 @@ bool GAtmoFlux::GenerateNext_1try(void)
   // Get a RandomGen instance
   RandomGen * rnd = RandomGen::Instance();
 
-  // Generate a (Ev, costheta, phi) tripley from the 'combined' flux histogram
+  // Generate a (Ev, costheta, phi) triplet from the 'combined' flux histogram
   double Ev       = 0.;
   double costheta = 0.;
   //this?
@@ -491,8 +491,8 @@ TH3D* GAtmoFlux::CreateNormalisedFluxHisto3D(TH3D* h3)
   hIntegratedFlux3D->Reset();
 
   // integrate flux in each bin
-  Double_t dN_dEdSdP = 0.0;
-  Double_t dS = 0.0;
+  Double_t dN_dEdCdP = 0.0;
+  Double_t dC = 0.0;
   Double_t dE = 0.0;
   Double_t dN = 0.0;
   Double_t dP = 0.0;
@@ -500,20 +500,18 @@ TH3D* GAtmoFlux::CreateNormalisedFluxHisto3D(TH3D* h3)
   for( Int_t nx=0; nx<h3->GetXaxis()->GetNbins(); nx++ ){ // x-axis: energy
     for( Int_t ny=0; ny<h3->GetYaxis()->GetNbins(); ny++ ){ // y-axis: angle
       for( Int_t nz=0; nz<h3->GetZaxis()->GetNbins(); nz++ ){ // z-axis: phi angle
-        dN_dEdSdP = h3->GetBinContent(nx+1,ny+1,nz+1);
+        dN_dEdCdP = h3->GetBinContent(nx+1,ny+1,nz+1);
 
         dE = h3->GetXaxis()->GetBinUpEdge(nx+1)
             - h3->GetXaxis()->GetBinLowEdge(nx+1);
 
-        dS = 2.0*TMath::Pi()
-           * ( h3->GetYaxis()->GetBinUpEdge(ny+1)
+        dC = ( h3->GetYaxis()->GetBinUpEdge(ny+1)
               - h3->GetYaxis()->GetBinLowEdge(ny+1) );
-        //this? maths still a problem
-        dP = TMath::Pi()
-           * ( h3->GetZaxis()->GetBinUpEdge(ny+1)
+
+        dP = ( h3->GetZaxis()->GetBinUpEdge(ny+1)
               - h3->GetZaxis()->GetBinLowEdge(ny+1) );
 
-        dN = dN_dEdSdP*dE*dS*dP;
+        dN = dN_dEdCdP*dE*dC*dP;
 
         hIntegratedFlux3D->SetBinContent(nx+1,ny+1,nz+1,dN);
       }
@@ -636,28 +634,26 @@ double GAtmoFlux::GetFlux(int flavour)
   if( hFlux3D==0 ) return 0.0;
 
   Double_t Flux = 0.0;
-  Double_t dN_dEdSdP = 0.0;
-  Double_t dS = 0.0;
+  Double_t dN_dEdCdP = 0.0;
+  Double_t dC = 0.0;
   Double_t dE = 0.0;
   Double_t dP = 0.0;
   
   for( Int_t nx=0; nx<hFlux3D->GetXaxis()->GetNbins(); nx++ ){ // x-axis: energy
     for( Int_t ny=0; ny<hFlux3D->GetYaxis()->GetNbins(); ny++ ){ // y-axis: angle
       for( Int_t nz=0; nz<hFlux3D->GetZaxis()->GetNbins(); nz++){ // z-axis: phi angle
-        dN_dEdSdP = hFlux3D->GetBinContent(nx+1,ny+1,nz+1);
+        dN_dEdCdP = hFlux3D->GetBinContent(nx+1,ny+1,nz+1);
 
         dE = hFlux3D->GetXaxis()->GetBinUpEdge(nx+1)
             - hFlux3D->GetXaxis()->GetBinLowEdge(nx+1);
 
-        dS = 2.0*TMath::Pi()
-           * ( hFlux3D->GetYaxis()->GetBinUpEdge(ny+1)
+        dC = ( hFlux3D->GetYaxis()->GetBinUpEdge(ny+1)
              - hFlux3D->GetYaxis()->GetBinLowEdge(ny+1) );
-        //this?  not sure about this maths here
-        dP = TMath::Pi()
-           * ( hFlux3D->GetZaxis()->GetBinUpEdge(nz+1)
+
+        dP =( hFlux3D->GetZaxis()->GetBinUpEdge(nz+1)
              - hFlux3D->GetZaxis()->GetBinLowEdge(nz+1) );
 
-        Flux += dN_dEdSdP*dE*dS*dP;
+        Flux += dN_dEdCdP*dE*dC*dP;
       }
     }
   }
@@ -675,23 +671,20 @@ double GAtmoFlux::GetFlux(int flavour, double energy)
   Int_t nE = hFlux3D->GetXaxis()->FindBin(energy); 
 
   Double_t Flux = 0.0;
-  Double_t dN_dEdSdP = 0.0;
-  Double_t dS = 0.0;
+  Double_t dN_dEdCdP = 0.0;
+  Double_t dC = 0.0;
   Double_t dP = 0.0;
 
   for( Int_t ny=0; ny<hFlux3D->GetYaxis()->GetNbins(); ny++ ){ // y-axis: angle
     for( Int_t nz=0; nz<hFlux3D->GetZaxis()->GetNbins(); nz++){ // z-axis: phi angle
-      dN_dEdSdP = hFlux3D->GetBinContent(nE,ny+1,nz+1);
+      dN_dEdCdP = hFlux3D->GetBinContent(nE,ny+1,nz+1);
 
-      dS = 2.0*TMath::Pi()
-         * ( hFlux3D->GetYaxis()->GetBinUpEdge(ny+1)
+      dC = ( hFlux3D->GetYaxis()->GetBinUpEdge(ny+1)
            - hFlux3D->GetYaxis()->GetBinLowEdge(ny+1) );
-      //this?  not sure about this maths here
-      dP = TMath::Pi()
-         * ( hFlux3D->GetZaxis()->GetBinUpEdge(nz+1)
+      dP = ( hFlux3D->GetZaxis()->GetBinUpEdge(nz+1)
            - hFlux3D->GetZaxis()->GetBinLowEdge(nz+1) );
 
-      Flux += dN_dEdSdP*dS*dP;
+      Flux += dN_dEdCdP*dC*dP;
  	 }
    }
   return Flux;
@@ -708,21 +701,18 @@ double GAtmoFlux::GetFlux(int flavour, double energy, double angle)
   Int_t nA = hFlux3D->GetYaxis()->FindBin(angle);
 
   Double_t Flux = 0.0;
-  Double_t dN_dEdSdP = 0.0;
+  Double_t dN_dEdCdP = 0.0;
   Double_t dP = 0.0;
-  Double_t dS = 0.0;
 
   for( Int_t nz=0; nz<hFlux3D->GetZaxis()->GetNbins(); nz++){ // z-axis: phi angle
-    dN_dEdSdP = hFlux3D->GetBinContent(nE,nA,nz+1);
-      //this? still not sure of the maths here
-    dP = TMath::Pi()
-       * ( hFlux3D->GetZaxis()->GetBinUpEdge(nz+1)
+    dN_dEdCdP = hFlux3D->GetBinContent(nE,nA,nz+1);
+    dP =( hFlux3D->GetZaxis()->GetBinUpEdge(nz+1)
          - hFlux3D->GetZaxis()->GetBinLowEdge(nz+1) );
 
-    Flux += dN_dEdSdP*dS*dP;
+    Flux += dN_dEdCdP*dP;
   }
 
-  return hFlux3D->GetBinContent(nE,nA);
+  return Flux;
 }
 
 //___________________________________________________________________________

@@ -30,6 +30,7 @@
 #include <TH3D.h>
 #include <TMath.h>
 
+
 #include "FluxDrivers/GHondaAtmoFlux.h"
 #include "Messenger/Messenger.h"
 
@@ -150,9 +151,10 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
   std::string junk;
   section = subsection = line = 1; //initialising some values
   costheta= 0.95;
-  phi = 2*TMath::Pi()*(15/360); 
+  phi = 2.0*TMath::Pi()*(15.0/360.0); 
 
   double scale = 1.0; // 1.0 [m^2], OR 1.0e-4 [cm^2]
+  
 
   if(pdg_nu == 14){
     while ( flux_stream ) {
@@ -163,9 +165,9 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
       } else {
         flux_stream >> energy >> flux >> junk >> junk >> junk; //currently only reads NuMu
         line++;
-        costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
+        costheta = 1.0 -((double)section*0.1) + 0.05; //costheta is known based on what
             //section of data we are in, this gives middle value
-        phi = 2*TMath::Pi()*((-15 + (subsection * 30))/360); //phi known by subsection, again gives middle value
+        phi = 2.0*TMath::Pi()*((-15.0 + ((double)subsection * 30.0))/360.0); //phi known by subsection, again gives middle value
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -182,7 +184,7 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
           << "Flux[Ev = " << energy 
           << ", cos8 = " << costheta
           << ", phi = " << phi << "] = " << flux;
-        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(costheta), (Axis_t)phi );   
+        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta), (Axis_t)phi );   
         histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
       }
     }
@@ -195,9 +197,9 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
       } else {
         flux_stream >> energy >> junk >> flux >> junk >> junk; //currently only reads NuMu
         line++;
-        costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
+        costheta = 1.0 -((double)section*0.1) + 0.05; //costheta is known based on what
             //section of data we are in, this gives middle value
-        phi = 2*TMath::Pi()*((-15 + (subsection * 30))/360); //phi known by subsection, again gives middle value
+        phi = 2*TMath::Pi()*((-15.0 + ((double)subsection * 30.0))/360.0); //phi known by subsection, again gives middle value
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -214,7 +216,7 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
           << "Flux[Ev = " << energy 
           << ", cos8 = " << costheta
           << ", phi = " << phi << "] = " << flux;
-        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(costheta), (Axis_t)phi );   
+        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta), (Axis_t)phi );   
         histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
       }
     }
@@ -227,9 +229,9 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
       } else {
         flux_stream >> energy >> junk >> junk >> flux >> junk; //currently only reads NuMu
         line++;
-        costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
+        costheta = 1.0 -((double)section*0.1) + 0.05; //costheta is known based on what
             //section of data we are in, this gives middle value
-        phi = 2*TMath::Pi()*((-15 + (subsection * 30))/360); //phi known by subsection, again gives middle value
+        phi = 2*TMath::Pi()*((-15.0 + ((double)subsection * 30.0))/360.0); //phi known by subsection, again gives middle value
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -246,7 +248,7 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
           << "Flux[Ev = " << energy 
           << ", cos8 = " << costheta
           << ", phi = " << phi << "] = " << flux;
-        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(costheta), (Axis_t)phi );   
+        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta), (Axis_t)phi );   
         histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
       }
     }
@@ -259,9 +261,9 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
       } else {
         flux_stream >> energy >> junk >> junk >> junk >> flux; //currently only reads NuMu
         line++;
-        costheta = 1 -(section*0.1) + 0.05; //costheta is known based on what
+        costheta = 1.0 -((double)section*0.1) + 0.05; //costheta is known based on what
                                             //section of data we are in, this gives middle value
-        phi = 2*TMath::Pi()*((-15 + (subsection * 30))/360);  //phi known by subsection, again gives middle value
+        phi = 2*TMath::Pi()*((-15.0 + ((double)subsection * 30.0))/360.0);  //phi known by subsection, again gives middle value
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -277,7 +279,7 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
           << "Flux[Ev = " << energy 
           << ", cos8 = " << costheta
           << ", phi = " << phi << "] = " << flux;
-        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(costheta), (Axis_t)phi );   
+        ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta), (Axis_t)phi );   
         histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
       }
     }
@@ -285,6 +287,7 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
     LOG("FLUX", pERROR) 
       << "PDG code is not a neutrino type supported by this file.";
   }
+
   return true;
 }
 //___________________________________________________________________________
