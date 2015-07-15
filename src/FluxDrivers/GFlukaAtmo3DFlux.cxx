@@ -31,7 +31,6 @@
 
 #include "FluxDrivers/GFlukaAtmo3DFlux.h"
 #include "Messenger/Messenger.h"
-#include "Numerical/RandomGen.h"
 
 using std::ifstream;
 using std::ios;
@@ -65,7 +64,10 @@ void GFlukaAtmo3DFlux::SetBinSizes(void)
 
   fCosThetaBins  = new double [kGFlk3DNumCosThetaBins  + 1];
   fEnergyBins    = new double [kGFlk3DNumLogEvBins     + 1];
-  fPhiBins       = new double [kGFlk3DNumPhiBins       + 1];
+  fPhiBins       = new double [2];
+
+  fPhiBins[0] = 0;
+  fPhiBins[1] = 2.*kPi;
 
   double dcostheta = 
       (kGFlk3DCosThetaMax - kGFlk3DCosThetaMin) /
@@ -94,18 +96,6 @@ void GFlukaAtmo3DFlux::SetBinSizes(void)
      }
   }
 
-  for(unsigned int i=0; i<= kGFlk3DNumPhiBins; i++) {
-     fPhiBins[i] = kGFlk3DPhiMin + i * dphi;
-     if(i != kGFlk3DNumPhiBins) {
-       LOG("Flux", pDEBUG) 
-         << "FLUKA flux: Phi bin " << i+1 
-         << ": lower edge = " << fPhiBins[i];
-     } else {
-       LOG("Flux", pDEBUG) 
-         << "FLUKA flux: Phi bin " << kGFlk3DNumPhiBins 
-         << ": upper edge = " << fPhiBins[kGFlk3DNumPhiBins];
-     }
-  }
 
   for(unsigned int i=0; i<= kGFlk3DNumLogEvBins; i++) {
      fEnergyBins[i] = TMath::Power(10., logEmin + i*dlogE);
@@ -128,7 +118,7 @@ void GFlukaAtmo3DFlux::SetBinSizes(void)
 
   fNumCosThetaBins = kGFlk3DNumCosThetaBins;
   fNumEnergyBins   = kGFlk3DNumLogEvBins;
-  fNumPhiBins      = kGFlk3DNumPhiBins;
+  fNumPhiBins      = 1;
 }
 //____________________________________________________________________________
 bool GFlukaAtmo3DFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& pdg_nu)
@@ -148,22 +138,19 @@ bool GFlukaAtmo3DFlux::FillFluxHisto3D(TH3D * histo, string filename, const int&
   int    ibin;
   double energy, costheta, flux;
   char   j1, j2;
-  RandomGen * rnd = RandomGen::Instance();
-  double phi = 0;
 
   double scale = 1.0; // 1.0 [m^2], OR 1.0e-4 [cm^2]
 
   while ( !flux_stream.eof() ) {
     flux = 0.0;
     flux_stream >> energy >> j1 >> costheta >> j2 >> flux;
-    phi = 2.0*TMath::Pi()* rnd->RndFlux().Rndm();
+
     if( flux>0.0 ){
       LOG("Flux", pINFO)
         << "Flux[Ev = " << energy 
-        << ", cos8 = " << costheta 
-        << ", phi = " << phi << "] = " << flux;;
+        << ", cos8 = " << costheta << "] = " << flux;
       // note: reversing the Fluka sign convention for zenith angle
-      ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta), (Axis_t)phi );   
+      ibin = histo->FindBin( (Axis_t)energy, (Axis_t)(-costheta), (Axis_t)kPi );   
       histo->SetBinContent( ibin, (Stat_t)(scale*flux) );
     }
   }

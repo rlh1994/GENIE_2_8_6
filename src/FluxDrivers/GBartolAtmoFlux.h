@@ -56,9 +56,6 @@ const unsigned int kBGLRS3DNumLogEvBinsPerDecadeLow  = 20;
 const unsigned int kBGLRS3DNumLogEvBinsHigh          = 30;
 const unsigned int kBGLRS3DNumLogEvBinsPerDecadeHigh = 10;
 const double       kBGLRS3DEvMin                     = 0.1; // GeV
-const unsigned int kBGLRS3DNumPhiBins                = 12; 
-const double       kBGLRS3DPhiMin                    = 0.0;
-const double       kBGLRS3DPhiMax                    = 2.0*TMath::Pi();
 
 class GBartolAtmoFlux: public GAtmoFlux {
 
