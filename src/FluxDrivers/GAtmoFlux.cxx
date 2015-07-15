@@ -627,7 +627,7 @@ TH3D* GAtmoFlux::GetFluxHistogram(int flavour)
 //___________________________________________________________________________
 double GAtmoFlux::GetFlux(int flavour)
 {
-  TH3D* hFlux3D = (TH3D*)(GetFluxHistogram(flavour));
+  TH3D* hFlux3D = this->(GetFluxHistogram(flavour);
 
   if( hFlux3D==0 ) return 0.0;
 
@@ -662,7 +662,7 @@ double GAtmoFlux::GetFlux(int flavour)
 //___________________________________________________________________________
 double GAtmoFlux::GetFlux(int flavour, double energy)
 {
-  TH3D* hFlux3D = (TH3D*)(GetFluxHistogram(flavour));
+  TH3D* hFlux3D = this->(GetFluxHistogram(flavour);
 
   if( hFlux3D==0 ) return 0.0;
 
@@ -691,7 +691,7 @@ double GAtmoFlux::GetFlux(int flavour, double energy)
 //___________________________________________________________________________
 double GAtmoFlux::GetFlux(int flavour, double energy, double angle)
 {
-  TH3D* hFlux3D = (TH3D*)(GetFluxHistogram(flavour));
+  TH3D* hFlux3D = this->GetFluxHistogram(flavour);
 
   if( hFlux3D==0 ) return 0.0; 
 
@@ -716,7 +716,7 @@ double GAtmoFlux::GetFlux(int flavour, double energy, double angle)
 //___________________________________________________________________________
 double GAtmoFlux::GetFlux(int flavour, double energy, double angle, double phi)
 {
-  TH3D* hFlux3D = (TH3D*)(GetFluxHistogram(flavour));
+  TH3D* hFlux3D = this->GetFluxHistogram(flavour);
 
   if( hFlux3D==0 ) return 0.0; 
 
