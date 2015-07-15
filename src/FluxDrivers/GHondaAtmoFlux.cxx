@@ -29,7 +29,6 @@
 
 #include <TH3D.h>
 #include <TMath.h>
-#include <TFile.h>
 
 
 #include "FluxDrivers/GHondaAtmoFlux.h"
@@ -287,9 +286,6 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
     LOG("FLUX", pERROR) 
       << "PDG code is not a neutrino type supported by this file.";
   }
-
-  TFile f("starthisto.root","new");
-  histo->Write();
 
   return true;
 }
