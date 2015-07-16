@@ -29,6 +29,7 @@
 
 #include <TH3D.h>
 #include <TMath.h>
+#include <TFile.h>
 
 
 #include "FluxDrivers/GHondaAtmoFlux.h"
@@ -162,11 +163,10 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
         std::getline(flux_stream, junk);
         line++; //ignore these lines
       } else {
-        flux_stream >> energy >> flux >> junk >> junk >> junk; //currently only reads NuMu
+        flux_stream >> energy >> flux >> junk >> junk >> junk; 
         line++;
-        costheta = 1.0 -((double)section*0.1) + 0.05; //costheta is known based on what
-            //section of data we are in, this gives middle value
-        phi = 2.0*TMath::Pi()*((-15.0 + ((double)subsection * 30.0))/360.0); //phi known by subsection, again gives middle value
+        costheta = 1.0 -((double)section*0.1) + 0.05; 
+        phi = 2.0*TMath::Pi()*((-15.0 + ((double)subsection * 30.0))/360.0); 
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -194,11 +194,10 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
         std::getline(flux_stream, junk);
         line++; //ignore these lines
       } else {
-        flux_stream >> energy >> junk >> flux >> junk >> junk; //currently only reads NuMu
+        flux_stream >> energy >> junk >> flux >> junk >> junk;
         line++;
-        costheta = 1.0 -((double)section*0.1) + 0.05; //costheta is known based on what
-            //section of data we are in, this gives middle value
-        phi = 2*TMath::Pi()*((-15.0 + ((double)subsection * 30.0))/360.0); //phi known by subsection, again gives middle value
+        costheta = 1.0 -((double)section*0.1) + 0.05; 
+        phi = 2*TMath::Pi()*((-15.0 + ((double)subsection * 30.0))/360.0);
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -226,11 +225,10 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
         std::getline(flux_stream, junk);
         line++; //ignore these lines
       } else {
-        flux_stream >> energy >> junk >> junk >> flux >> junk; //currently only reads NuMu
+        flux_stream >> energy >> junk >> junk >> flux >> junk; 
         line++;
-        costheta = 1.0 -((double)section*0.1) + 0.05; //costheta is known based on what
-            //section of data we are in, this gives middle value
-        phi = 2*TMath::Pi()*((-15.0 + ((double)subsection * 30.0))/360.0); //phi known by subsection, again gives middle value
+        costheta = 1.0 -((double)section*0.1) + 0.05; 
+        phi = 2*TMath::Pi()*((-15.0 + ((double)subsection * 30.0))/360.0); 
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -258,11 +256,9 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
         std::getline(flux_stream, junk);
         line++; //ignore these lines
       } else {
-        flux_stream >> energy >> junk >> junk >> junk >> flux; //currently only reads NuMu
-        line++;
-        costheta = 1.0 -((double)section*0.1) + 0.05; //costheta is known based on what
-                                            //section of data we are in, this gives middle value
-        phi = 2*TMath::Pi()*((-15.0 + ((double)subsection * 30.0))/360.0);  //phi known by subsection, again gives middle value
+        flux_stream >> energy >> junk >> junk >> junk >> flux; 
+        costheta = 1.0 -((double)section*0.1) + 0.05; 
+        phi = 2*TMath::Pi()*((-15.0 + ((double)subsection * 30.0))/360.0);  
         if( line == 104 ){ //new phi range
           ++subsection;
           line = 1;
@@ -286,6 +282,9 @@ bool GHondaAtmoFlux::FillFluxHisto3D(TH3D * histo, string filename, const int& p
     LOG("FLUX", pERROR) 
       << "PDG code is not a neutrino type supported by this file.";
   }
+
+  TFile f("starthisto.root","new");
+  histo->Write();
 
   return true;
 }
